@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "stm32-agent"
+version = "2.0.0"
+description = "STM32 HAL Library 智能开发助手 Agent - 22个外设模块完整覆盖"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+authors = [
+    {name = "John", email = "jinsherry4@users.noreply.github.com"}
+]
+keywords = ["stm32", "hal", "embedded", "agent", "cube-mx", "microcontroller"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Embedded Systems",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+
+[project.urls]
+Homepage = "https://github.com/jinsherry4/stm32-agent"
+Repository = "https://github.com/jinsherry4/stm32-agent"
+Issues = "https://github.com/jinsherry4/stm32-agent/issues"
+
+[project.scripts]
+stm32-agent = "stm32_agent.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["stm32_agent*"]
+
+[tool.setuptools.package-data]
+stm32_agent = ["py.typed"]
