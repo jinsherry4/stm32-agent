@@ -3,9 +3,9 @@
 __skill_name__ = "wdg"
 __all__ = ["get_skill_info"]
 
-# Raw skill data dict (parsed by knowledge_base.py)
-SKILL_DATA = '''
-    "wdg": {
+# Skill data dict (parsed by knowledge_base.py)
+SILL_DATA = {
+"wdg": {
         "description": "看门狗定时器，防止程序死锁/跑飞。分为独立看门狗(IWDG)和窗口看门狗(WDG)",
         "two_types": [
             ("IWDG (Independent Watchdog)", "独立看门狗 - 使用独立的 40kHz LSI 时钟源, 即使主时钟故障也能工作. 用于防止系统死锁, 超时未喂狗则复位系统."),
@@ -47,7 +47,7 @@ IWDG 超时计算公式:
 ⚠️ 推荐: 1~5 秒超时, 在主循环或 RTOS 任务中每 200~500ms 喂一次狗
 """,
         "code_example": ''' ===== IWDG 独立看门狗示例 ===== */
-/* CubeMX 配置: System Core → IWDG → Enable
+/* CubeMX 配置: System Core -> IWDG -> Enable
  *   Prescaler: IWDG_PRESCALER_256
  *   Reload Counter: 635 (约4秒超时)
  */
@@ -56,41 +56,41 @@ void IWDG_Init_Example(void) {
     IWDG_HandleTypeDef hiwdg;
     hiwdg.Instance = IWDG;
     hiwdg.Init.Prescaler = IWDG_PRESCALER_256;
-    hiwdg.Init.Reload = 635;  // ~4秒超时
+    hiwdg.Init.Reload = 635;  # ~4秒超时
     HAL_IWDG_Init(&hiwdg);
 }
 
-// 主循环中定期喂狗 (必须在超时时间内调用!)
+# 主循环中定期喂狗 (必须在超时时间内调用!)
 while (1) {
-    HAL_IWDG_Refresh(&hiwdg);  // 喂狗!
+    HAL_IWDG_Refresh(&hiwdg);  # 喂狗!
 
-    // ... 业务逻辑 ...
+    # ... 业务逻辑 ...
 
-    // 如果代码卡死在某处, 超过4秒没喂狗 → 系统自动复位!
+    # 如果代码卡死在某处, 超过4秒没喂狗 -> 系统自动复位!
 }
 
-// ===== WWDG 窗口看门狗示例 ===== */
+# ===== WWDG 窗口看门狗示例 ===== */
 /*
- * CubeMX 配置: System Core → WWDG → Enable
+ * CubeMX 配置: System Core -> WWDG -> Enable
  *   Prescaler: APB1/8
  *   Window Value: 64 (0x40)  ← 不能早于此时喂狗
  *   Counter: 127 (0x7F)      ← 不能晚于此时(减到0x3F=复位)
  *   窗口范围: counter从0x7F递减到0x40之间可以喂狗
  */
 void HAL_WWDG_EarlyWakeupCallback(WWDG_HandleTypeDef* hwwdg) {
-    // 太早喂狗了! 说明程序执行异常地快 → 处理错误
+    # 太早喂狗了! 说明程序执行异常地快 -> 处理错误
     Error_Handler();
 }
 ''',
 
         "references": [
-            {"source": "engineer-ae3o/stm32-hal-library", "url": "https://github.com/engineer-ae3o/stm32-hal-library", "note": "Watchdog HAL 实现"},
+            {"source": "engineer-ae3o/stm32-hal-library", "url": "https:#github.com/engineer-ae3o/stm32-hal-library", "note": "Watchdog HAL 实现"},
         ]
     },
 
     # ---- 13. EXTI (外部中断/事件控制器) ----
-'''
+}
 
 def get_skill_info() -> dict:
     """Return this skill's knowledge base entry as a Python dict."""
-    return eval(SKILL_DATA)
+    return SILL_DATA

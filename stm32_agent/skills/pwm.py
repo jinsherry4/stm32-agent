@@ -3,9 +3,9 @@
 __skill_name__ = "pwm"
 __all__ = ["get_skill_info"]
 
-# Raw skill data dict (parsed by knowledge_base.py)
-SKILL_DATA = '''
-    "pwm": {
+# Skill data dict (parsed by knowledge_base.py)
+SILL_DATA = {
+"pwm": {
         "description": "PWM 脉宽调制输出，基于定时器 PWM 模式实现。用于电机调速、LED调光、舵机控制、DAC 输出等",
         "parameters": [
             ("Prescaler (PSC)", "预分频器 - 决定计数频率: fcnt=fclk/(PSC+1)"),
@@ -28,36 +28,36 @@ SKILL_DATA = '''
             "__HAL_TIM_SET_COMPARE()",
         ],
         "code_example": '''
-// CubeMX 配置: Timers → TIM4 → Channel1 PWM Generation CH1
-//   Prescaler (PSC) = 83    → 84MHz/84 = 1MHz 计数频率
-//   Counter Period (ARR) = 999 → fpwm = 1MHz/1000 = 1000Hz (1kHz)
-//   Pulse (CCR1) = 500     → 占空比 = 500/1000 = 50%
+# CubeMX 配置: Timers -> TIM4 -> Channel1 PWM Generation CH1
+#   Prescaler (PSC) = 83    -> 84MHz/84 = 1MHz 计数频率
+#   Counter Period (ARR) = 999 -> fpwm = 1MHz/1000 = 1000Hz (1kHz)
+#   Pulse (CCR1) = 500     -> 占空比 = 500/1000 = 50%
 
-// 启动 PWM
+# 启动 PWM
 HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
 
-// 动态调节亮度 (0~100%)
+# 动态调节亮度 (0~100%)
 void LED_SetBrightness(uint8_t percent) {
-    __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, percent * 10);  // ARR=999
+    __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, percent * 10);  # ARR=999
 }
 
-// 舵机控制 SG90 (PA0/TIM2_CH1, 50Hz)
-// PSC=8399, ARR=19999 → 84MHz/8400/20000 = 0.5Hz? 不对
-// 正确: 84MHz/(83+1)/(19999+1) = 50Hz ✓
-// 0°: Pulse=500 (0.5ms), 90°: Pulse=1500 (1.5ms), 180°: Pulse=2500 (2.5ms)
+# 舵机控制 SG90 (PA0/TIM2_CH1, 50Hz)
+# PSC=8399, ARR=19999 -> 84MHz/8400/20000 = 0.5Hz? 不对
+# 正确: 84MHz/(83+1)/(19999+1) = 50Hz ✓
+# 0°: Pulse=500 (0.5ms), 90°: Pulse=1500 (1.5ms), 180°: Pulse=2500 (2.5ms)
 void Servo_SetAngle(uint8_t angle) {
-    uint16_t pulse = 500 + (angle * 2000 / 180);  // 500~2500
+    uint16_t pulse = 500 + (angle * 2000 / 180);  # 500~2500
     __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, pulse);
 }
 ''',
         "references": [
-            {"source": "engineer-ae3o/stm32-hal-library", "url": "https://github.com/engineer-ae3o/stm32-hal-library", "note": "PWM + 定时器 HAL 实现"},
+            {"source": "engineer-ae3o/stm32-hal-library", "url": "https:#github.com/engineer-ae3o/stm32-hal-library", "note": "PWM + 定时器 HAL 实现"},
         ]
     },
 
     # ---- 7. DMA (直接存储器访问) ----
-'''
+}
 
 def get_skill_info() -> dict:
     """Return this skill's knowledge base entry as a Python dict."""
-    return eval(SKILL_DATA)
+    return SILL_DATA

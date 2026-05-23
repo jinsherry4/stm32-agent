@@ -3,9 +3,9 @@
 __skill_name__ = "oled"
 __all__ = ["get_skill_info"]
 
-# Raw skill data dict (parsed by knowledge_base.py)
-SKILL_DATA = '''
-    "oled": {
+# Skill data dict (parsed by knowledge_base.py)
+SILL_DATA = {
+"oled": {
         "description": "SSD1306 OLED 显示屏驱动 (128×64像素)。支持 I2C/SPI 两种接口。用于显示文字、图像、波形、状态信息",
         "specs": {
             "分辨率": "128×64 像素 (默认), 也支持 128×32",
@@ -16,8 +16,8 @@ SKILL_DATA = '''
             "视角": ">160度",
         },
         "libraries": [
-            {"name": "4ilo/ssd1306-stm32HAL", "interface": "I2C", "url": "https://github.com/4ilo/ssd1306-stm32HAL"},
-            {"name": "afiskon/stm32-ssd1306", "interface": "SPI+I2C", "url": "https://github.com/afiskon/stm32-ssd1306"},
+            {"name": "4ilo/ssd1306-stm32HAL", "interface": "I2C", "url": "https:#github.com/4ilo/ssd1306-stm32HAL"},
+            {"name": "afiskon/stm32-ssd1306", "interface": "SPI+I2C", "url": "https:#github.com/afiskon/stm32-ssd1306"},
             {"name": "stm32-ssd1306 (Gitee)", "interface": "SPI+I2C", "note": "支持 SH1106/SH1107/SSD1309 兼容"},
         ],
         "api_functions": [
@@ -32,53 +32,53 @@ SKILL_DATA = '''
             "ssd1306_SetContrast(level) - 设置对比度(0-255)",
         ],
         "code_example": '''
-// === 方案A: 使用 4ilo/ssd1306-stm32HAL 库 (I2C) ===
+# === 方案A: 使用 4ilo/ssd1306-stm32HAL 库 (I2C) ===
 #include "ssd1306.h"
 #include "fonts.h"
 
-// 初始化 (只需调用一次)
+# 初始化 (只需调用一次)
 ssd1306_Init(&hi2c1);
 
-// 绘制操作 (都在本地缓冲区进行)
-ssd1306_Fill(Black);                              // 清屏
+# 绘制操作 (都在本地缓冲区进行)
+ssd1306_Fill(Black);                              # 清屏
 ssd1306_SetCursor(0, 0);
-ssd1306_WriteString("Hello STM32!", Font_11x18, White);  // 标题
+ssd1306_WriteString("Hello STM32!", Font_11x18, White);  # 标题
 ssd1306_SetCursor(0, 28);
-ssd1306_WriteString("Temp: 25.6 C", Font_7x10, White);    // 数据行
+ssd1306_WriteString("Temp: 25.6 C", Font_7x10, White);    # 数据行
 
-// 刷新到屏幕 (必须调用!)
+# 刷新到屏幕 (必须调用!)
 ssd1306_UpdateScreen(&hi2c1);
 
-// 数码管倒计时显示 (参考 HW7 项目)
+# 数码管倒计时显示 (参考 HW7 项目)
 void Display_CountDown(uint8_t seconds) {
     static const uint8_t seg_codes[] = {
         0xC0,0xF9,0xA4,0xB0,0x99,0x92,0x82,0xF8,
         0x80,0x90,0x88,0x83,0xC6,0xA1,0x86,0x8E
-    };  // 共阳段码 0-F
-    // ... 段选 + 位选动态扫描
+    };  # 共阳段码 0-F
+    # ... 段选 + 位选动态扫描
 }
 
-// === 方案B: 直接用 HAL_I2C 操作 SSD1306 寄存器 ===
-// 写命令
+# === 方案B: 直接用 HAL_I2C 操作 SSD1306 寄存器 ===
+# 写命令
 void OLED_WriteCmd(uint8_t cmd) {
-    uint8_t buf[2] = {0x00, cmd};  // Control Byte=0x00(命令)
+    uint8_t buf[2] = {0x00, cmd};  # Control Byte=0x00(命令)
     HAL_I2C_Master_Transmit(&hi2c1, 0x78, buf, 2, 100);
 }
-// 写数据
+# 写数据
 void OLED_WriteData(uint8_t data) {
-    uint8_t buf[2] = {0x40, data};  // Control Byte=0x40(数据)
+    uint8_t buf[2] = {0x40, data};  # Control Byte=0x40(数据)
     HAL_I2C_Master_Transmit(&hi2c1, 0x78, buf, 2, 100);
 }
-// 设置坐标
+# 设置坐标
 void OLED_SetCursor(uint8_t x, uint8_t page) {
-    OLED_WriteCmd(0xB0 | page);         // Page 地址
-    OLED_WriteCmd(0x10 | (x >> 4));     // 列地址高4位
-    OLED_WriteCmd(0x0F & x);            // 列地址低4位
+    OLED_WriteCmd(0xB0 | page);         # Page 地址
+    OLED_WriteCmd(0x10 | (x >> 4));     # 列地址高4位
+    OLED_WriteCmd(0x0F & x);            # 列地址低4位
 }
 ''',
         "references": [
-            {"source": "4ilo/ssd1306-stm32HAL", "url": "https://github.com/4ilo/ssd1306-stm32HAL", "note": "MIT开源, I2C SSD1306 驱动库"},
-            {"source": "IoTWord: STM32 I2C/SPI+DMA驱动SSD1306", "url": "https://www.iotword.com/17744.html", "note": "DMA加速 OLED 驱动方案"},
+            {"source": "4ilo/ssd1306-stm32HAL", "url": "https:#github.com/4ilo/ssd1306-stm32HAL", "note": "MIT开源, I2C SSD1306 驱动库"},
+            {"source": "IoTWord: STM32 I2C/SPI+DMA驱动SSD1306", "url": "https:#www.iotword.com/17744.html", "note": "DMA加速 OLED 驱动方案"},
         ]
     },
 
@@ -107,9 +107,9 @@ void OLED_SetCursor(uint8_t x, uint8_t page) {
         ],
         "operation_flow": """
 W25Q64 操作流程 (非常重要!):
-  读:    CS低 → 发送指令(03/0B) → 发送地址 → 读取数据 → CS高
-  写:    写使能(06) → CS低 → 页编程(02)+地址+数据 → CS高 → 等待BUSY清零
-  擦除:  写使能(06) → CS低 → 扇区擦除(20)+地址 → CS高 → 等待BUSY清零(~50ms)
+  读:    CS低 -> 发送指令(03/0B) -> 发送地址 -> 读取数据 -> CS高
+  写:    写使能(06) -> CS低 -> 页编程(02)+地址+数据 -> CS高 -> 等待BUSY清零
+  擦除:  写使能(06) -> CS低 -> 扇区擦除(20)+地址 -> CS高 -> 等待BUSY清零(~50ms)
   ⚠️ 写之前必须擦除! 擦除只能将1变0!
 """,
         "code_example": '''
@@ -135,20 +135,20 @@ void W25Q64_WriteEnable(void) {
     SPI_Select(); SPI_RW(W25Q64_WRITE_ENABLE); SPI_Unselect();
 }
 
-// 扇区擦除 (4KB)
+# 扇区擦除 (4KB)
 void W25Q64_SectorErase(uint32_t sector_addr) {
     W25Q64_WaitBusy();
     W25Q64_WriteEnable();
     SPI_Select();
     SPI_RW(W25Q64_SECTOR_ERASE);
-    SPI_RW((addr >> 16) & 0xFF);  // 地址3字节(Big-Endian)
+    SPI_RW((addr >> 16) & 0xFF);  # 地址3字节(Big-Endian)
     SPI_RW((addr >> 8) & 0xFF);
     SPI_RW(addr & 0xFF);
     SPI_Unselect();
-    W25Q64_WaitBusy();  // 等待约 50ms
+    W25Q64_WaitBusy();  # 等待约 50ms
 }
 
-// 页写入 (最大256字节)
+# 页写入 (最大256字节)
 void W25Q64_PageWrite(uint32_t addr, uint8_t *data, uint16_t len) {
     W25Q64_WaitBusy();
     W25Q64_WriteEnable();
@@ -161,22 +161,22 @@ void W25Q64_PageWrite(uint32_t addr, uint8_t *data, uint16_t len) {
     SPI_Unselect();
 }
 
-// 从 Flash 读取汉字字库并在 OLED 上显示
+# 从 Flash 读取汉字字库并在 OLED 上显示
 void OLED_ShowChinese(uint16_t addr) {
-    uint8_t font_buf[32];  // 16×16汉字 = 32字节
+    uint8_t font_buf[32];  # 16×16汉字 = 32字节
     W25Q64_ReadData(addr, font_buf, 32);
-    // 将字模数据写入 OLED 显存...
+    # 将字模数据写入 OLED 显存...
 }
 ''',
         "references": [
-            {"source": "GitHub Topics: w25q64", "url": "https://github.com/topics/w25q64", "note": "W25Q64 相关项目合集"},
-            {"source": "CSDN: STM32CubeMX+HAL+SPI读写W25Q64", "url": "https://blog.csdn.net/weixin_71894495/article/details/149944069"},
+            {"source": "GitHub Topics: w25q64", "url": "https:#github.com/topics/w25q64", "note": "W25Q64 相关项目合集"},
+            {"source": "CSDN: STM32CubeMX+HAL+SPI读写W25Q64", "url": "https:#blog.csdn.net/weixin_71894495/article/details/149944069"},
         ]
     },
 
     # ---- 11. PWR (电源管理) ----
-'''
+}
 
 def get_skill_info() -> dict:
     """Return this skill's knowledge base entry as a Python dict."""
-    return eval(SKILL_DATA)
+    return SILL_DATA

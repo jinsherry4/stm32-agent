@@ -3,9 +3,9 @@
 __skill_name__ = "dma"
 __all__ = ["get_skill_info"]
 
-# Raw skill data dict (parsed by knowledge_base.py)
-SKILL_DATA = '''
-    "dma": {
+# Skill data dict (parsed by knowledge_base.py)
+SILL_DATA = {
+"dma": {
         "description": "DMA 直接存储器访问，无需 CPU 参与即可在外设与内存间搬运数据。用于 ADC 多通道采集、UART 高速收发、SPI/I2C 批量传输",
         "key_concepts": [
             ("Stream/Channel", "DMA 流和通道 - 不同外设使用固定通道(查手册!)"),
@@ -37,20 +37,20 @@ SKILL_DATA = '''
             "HAL_SPI_Transmit_DMA()",
         ],
         "code_example": '''
-// CubeMX 配置: System Core → DMA → 添加 ADC1
-//   Channel: DMA1 Channel1
-//   Direction: Peripheral To Memory
-//   Priority: High
-//   Mode: Circular (循环)
-//   Data Width: Half Word (16bit, 匹配ADC)
-//   Increment Address: Memory=Yes, Peripheral=No
+# CubeMX 配置: System Core -> DMA -> 添加 ADC1
+#   Channel: DMA1 Channel1
+#   Direction: Peripheral To Memory
+#   Priority: High
+#   Mode: Circular (循环)
+#   Data Width: Half Word (16bit, 匹配ADC)
+#   Increment Address: Memory=Yes, Peripheral=No
 
-uint16_t adc_dma_buffer[3];  // 3通道ADC DMA缓冲区
+uint16_t adc_dma_buffer[3];  # 3通道ADC DMA缓冲区
 
-// 启动 ADC + DMA (自动连续采集到缓冲区)
+# 启动 ADC + DMA (自动连续采集到缓冲区)
 HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_dma_buffer, 3);
 
-// main循环中直接读取 buffer 即可(无需调用任何API!)
+# main循环中直接读取 buffer 即可(无需调用任何API!)
 while(1) {
     float ch0_volt = (adc_dma_buffer[0]/4095.0f)*3.3f;
     float ch1_volt = (adc_dma_buffer[1]/4095.0f)*3.3f;
@@ -58,19 +58,19 @@ while(1) {
     HAL_Delay(100);
 }
 
-// DMA 传输完成回调 (Normal模式下触发)
+# DMA 传输完成回调 (Normal模式下触发)
 void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef* hadc) {}
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {}
 ''',
         "references": [
-            {"source": "engineer-ae3o/stm32-hal-library", "url": "https://github.com/engineer-ae3o/stm32-hal-library", "note": "DMA HAL 实现"},
-            {"source": "DeepBlueEmbedded", "url": "https://deepbluembedded.com/", "note": "STM32 HAL DMA 完整教程"},
+            {"source": "engineer-ae3o/stm32-hal-library", "url": "https:#github.com/engineer-ae3o/stm32-hal-library", "note": "DMA HAL 实现"},
+            {"source": "DeepBlueEmbedded", "url": "https:#deepbluembedded.com/", "note": "STM32 HAL DMA 完整教程"},
         ]
     },
 
     # ---- 8. RTC (实时时钟) ----
-'''
+}
 
 def get_skill_info() -> dict:
     """Return this skill's knowledge base entry as a Python dict."""
-    return eval(SKILL_DATA)
+    return SILL_DATA

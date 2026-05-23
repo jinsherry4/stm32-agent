@@ -3,9 +3,9 @@
 __skill_name__ = "spi"
 __all__ = ["get_skill_info"]
 
-# Raw skill data dict (parsed by knowledge_base.py)
-SKILL_DATA = '''
-    "spi": {
+# Skill data dict (parsed by knowledge_base.py)
+SILL_DATA = {
+"spi": {
         "description": "SPI 高速同步串行总线，用于连接 Flash 存储器(W25Q64)、TFT 屏幕、SD 卡等高速外设",
         "modes": [
             ("SPI_MODE_MASTER", "主模式 - MCU 控制 SCK 时钟"),
@@ -26,9 +26,9 @@ SKILL_DATA = '''
         ],
         "wiring": "MOSI(PA7/PB5) MISO(PA6/PB4) SCK(PA5/PB3) CS(NSS-任意GPIO)",
         "code_example": '''
-// CubeMX 配置: Connectivity → SPI1 → Full-Duplex Master
-// 参数: Prescaler=256(281.25KBps), MSB First, CPOL=Low, CPHA=1Edge
-// CS 引脚配置为 GPIO Output (手动控制片选)
+# CubeMX 配置: Connectivity -> SPI1 -> Full-Duplex Master
+# 参数: Prescaler=256(281.25KBps), MSB First, CPOL=Low, CPHA=1Edge
+# CS 引脚配置为 GPIO Output (手动控制片选)
 
 #define W25Q64_CS_GPIO  GPIOB
 #define W25Q64_CS_PIN   GPIO_PIN_6
@@ -42,19 +42,19 @@ uint8_t SPI_RW(uint8_t data) {
     return rx_data;
 }
 
-// 读取 W25Q64 JEDEC ID
+# 读取 W25Q64 JEDEC ID
 void W25Q64_ReadID(uint8_t *id) {
     SPI_Select();
-    SPI_RW(0x9F);              // Read JEDEC ID 指令
-    id[0] = SPI_RW(0xFF);     // Manufacturer ID
-    id[1] = SPI_RW(0xFF);     // Memory Type
-    id[2] = SPI_RW(0xFF);     // Capacity
+    SPI_RW(0x9F);              # Read JEDEC ID 指令
+    id[0] = SPI_RW(0xFF);     # Manufacturer ID
+    id[1] = SPI_RW(0xFF);     # Memory Type
+    id[2] = SPI_RW(0xFF);     # Capacity
     SPI_Unselect();
 }
 ''',
         "references": [
-            {"source": "engineer-ae3o/stm32-hal-library", "url": "https://github.com/engineer-ae3o/stm32-hal-library", "note": "SPI HAL 实现"},
-            {"source": "CSDN: STM32CubeMX+HAL+硬件SPI读写W25Q64", "url": "https://blog.csdn.net/weixin_71894495/article/details/149944069"},
+            {"source": "engineer-ae3o/stm32-hal-library", "url": "https:#github.com/engineer-ae3o/stm32-hal-library", "note": "SPI HAL 实现"},
+            {"source": "CSDN: STM32CubeMX+HAL+硬件SPI读写W25Q64", "url": "https:#blog.csdn.net/weixin_71894495/article/details/149944069"},
         ]
     },
 
@@ -85,35 +85,35 @@ void W25Q64_ReadID(uint8_t *id) {
             "BH1750 光照": "0x46",
         },
         "code_example": '''
-// CubeMX 配置: Connectivity → I2C1 → I2C → Speed=Fast Mode (400kHz)
-// 注意: 必须在 I2C Configuration → Timing 中选择正确参数
+# CubeMX 配置: Connectivity -> I2C1 -> I2C -> Speed=Fast Mode (400kHz)
+# 注意: 必须在 I2C Configuration -> Timing 中选择正确参数
 
-// 检测 I2C 设备是否在线
+# 检测 I2C 设备是否在线
 HAL_StatusTypeDef status = HAL_I2C_IsDeviceReady(&hi2c1, 0x78, 3, 100);
 if (status == HAL_OK) {
     printf("OLED SSD1306 found!\\\\n");
 }
 
-// 写入 OLED 寄存器 (SSD1306 初始化序列)
-uint8_t init_cmds[] = {0xAE, 0x20, 0x10, ...};  // 关闭显示, 寻址模式...
+# 写入 OLED 寄存器 (SSD1306 初始化序列)
+uint8_t init_cmds[] = {0xAE, 0x20, 0x10, ...};  # 关闭显示, 寻址模式...
 HAL_I2C_Mem_Write(&hi2c1, 0x78, 0x00, I2C_MEMADD_SIZE_8BIT,
                   init_cmds, sizeof(init_cmds), 100);
 
-// 从 MPU6050 读取加速度数据
+# 从 MPU6050 读取加速度数据
 uint8_t data[6];
 HAL_I2C_Mem_Read(&hi2c1, 0xD0, 0x3B, I2C_MEMADD_SIZE_8BIT,
                  data, 6, 100);
-// data[0..2]=AccX/Y/Z high+low bytes
+# data[0..2]=AccX/Y/Z high+low bytes
 ''',
         "references": [
-            {"source": "engineer-ae3o/stm32-hal-library", "url": "https://github.com/engineer-ae3o/stm32-hal-library", "note": "I2C HAL 实现"},
-            {"source": "DeepBlueEmbedded", "url": "https://deepbluembedded.com/stm32-i2c-tutorial-hal-examples-slave-dma/", "note": "I2C Master/Slave + DMA 完整教程"},
+            {"source": "engineer-ae3o/stm32-hal-library", "url": "https:#github.com/engineer-ae3o/stm32-hal-library", "note": "I2C HAL 实现"},
+            {"source": "DeepBlueEmbedded", "url": "https:#deepbluembedded.com/stm32-i2c-tutorial-hal-examples-slave-dma/", "note": "I2C Master/Slave + DMA 完整教程"},
         ]
     },
 
     # ---- 5. ADC (模数转换器) ----
-'''
+}
 
 def get_skill_info() -> dict:
     """Return this skill's knowledge base entry as a Python dict."""
-    return eval(SKILL_DATA)
+    return SILL_DATA

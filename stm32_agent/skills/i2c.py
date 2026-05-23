@@ -3,9 +3,9 @@
 __skill_name__ = "i2c"
 __all__ = ["get_skill_info"]
 
-# Raw skill data dict (parsed by knowledge_base.py)
-SKILL_DATA = '''
-    "i2c": {
+# Skill data dict (parsed by knowledge_base.py)
+SILL_DATA = {
+"i2c": {
         "description": "I2C 双线串行总线，用于连接 OLED 显示屏(SSD1306)、温湿度传感器(AHT20)、EEPROM、MPU6050 等",
         "modes": [
             ("I2C_MODE_I2C", "标准 I2C 模式"),
@@ -31,33 +31,33 @@ SKILL_DATA = '''
             "BH1750 光照": "0x46",
         },
         "code_example": '''
-// CubeMX 配置: Connectivity → I2C1 → I2C → Speed=Fast Mode (400kHz)
-// 注意: 必须在 I2C Configuration → Timing 中选择正确参数
+# CubeMX 配置: Connectivity -> I2C1 -> I2C -> Speed=Fast Mode (400kHz)
+# 注意: 必须在 I2C Configuration -> Timing 中选择正确参数
 
-// 检测 I2C 设备是否在线
+# 检测 I2C 设备是否在线
 HAL_StatusTypeDef status = HAL_I2C_IsDeviceReady(&hi2c1, 0x78, 3, 100);
 if (status == HAL_OK) {
     printf("OLED SSD1306 found!\\n");
 }
 
-// 写入 OLED 寄存器 (SSD1306 初始化序列)
-uint8_t init_cmds[] = {0xAE, 0x20, 0x10, ...};  // 关闭显示, 寻址模式...
+# 写入 OLED 寄存器 (SSD1306 初始化序列)
+uint8_t init_cmds[] = {0xAE, 0x20, 0x10, ...};  # 关闭显示, 寻址模式...
 HAL_I2C_Mem_Write(&hi2c1, 0x78, 0x00, I2C_MEMADD_SIZE_8BIT,
                   init_cmds, sizeof(init_cmds), 100);
 
-// 从 MPU6050 读取加速度数据
+# 从 MPU6050 读取加速度数据
 uint8_t data[6];
 HAL_I2C_Mem_Read(&hi2c1, 0xD0, 0x3B, I2C_MEMADD_SIZE_8BIT,
                  data, 6, 100);
-// data[0..2]=AccX/Y/Z high+low bytes
+# data[0..2]=AccX/Y/Z high+low bytes
 ''',
         "references": [
-            {"source": "engineer-ae3o/stm32-hal-library", "url": "https://github.com/engineer-ae3o/stm32-hal-library", "note": "I2C HAL 实现"},
-            {"source": "DeepBlueEmbedded", "url": "https://deepbluembedded.com/stm32-i2c-tutorial-hal-examples-slave-dma/", "note": "I2C Master/Slave + DMA 完整教程"},
+            {"source": "engineer-ae3o/stm32-hal-library", "url": "https:#github.com/engineer-ae3o/stm32-hal-library", "note": "I2C HAL 实现"},
+            {"source": "DeepBlueEmbedded", "url": "https:#deepbluembedded.com/stm32-i2c-tutorial-hal-examples-slave-dma/", "note": "I2C Master/Slave + DMA 完整教程"},
         ]
-    },
-'''
+    }
+}
 
 def get_skill_info() -> dict:
-    """Return the skill data as a Python dict."""
-    return eval(SKILL_DATA)
+    """Return this skill's knowledge base entry as a Python dict."""
+    return SILL_DATA

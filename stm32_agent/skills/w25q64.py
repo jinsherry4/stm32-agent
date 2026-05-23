@@ -1,11 +1,11 @@
-"""W25Q64 SPI Flash - STM32 HAL Library Skill Module"""
+"""W25Q64 - STM32 HAL Library Skill Module"""
 
 __skill_name__ = "w25q64"
 __all__ = ["get_skill_info"]
 
-# Raw skill data dict (parsed by knowledge_base.py)
-SKILL_DATA = '''
-    "w25q64": {
+# Skill data dict (parsed by knowledge_base.py)
+SILL_DATA = {
+"w25q64": {
         "description": "W25Q64 系列 SPI NOR Flash 芯片 (8MB/16MB容量)。用于存储字库文件、日志数据、固件升级、图片资源等",
         "specs": {
             "W25Q64": "8 MByte (64 Mbit), 128 个扇区",
@@ -29,9 +29,9 @@ SKILL_DATA = '''
         ],
         "operation_flow": """
 W25Q64 操作流程 (非常重要!):
-  读:    CS低 → 发送指令(03/0B) → 发送地址 → 读取数据 → CS高
-  写:    写使能(06) → CS低 → 页编程(02)+地址+数据 → CS高 → 等待BUSY清零
-  擦除:  写使能(06) → CS低 → 扇区擦除(20)+地址 → CS高 → 等待BUSY清零(~50ms)
+  读:    CS低 -> 发送指令(03/0B) -> 发送地址 -> 读取数据 -> CS高
+  写:    写使能(06) -> CS低 -> 页编程(02)+地址+数据 -> CS高 -> 等待BUSY清零
+  擦除:  写使能(06) -> CS低 -> 扇区擦除(20)+地址 -> CS高 -> 等待BUSY清零(~50ms)
   ⚠️ 写之前必须擦除! 擦除只能将1变0!
 """,
         "code_example": '''
@@ -57,20 +57,20 @@ void W25Q64_WriteEnable(void) {
     SPI_Select(); SPI_RW(W25Q64_WRITE_ENABLE); SPI_Unselect();
 }
 
-// 扇区擦除 (4KB)
+# 扇区擦除 (4KB)
 void W25Q64_SectorErase(uint32_t sector_addr) {
     W25Q64_WaitBusy();
     W25Q64_WriteEnable();
     SPI_Select();
     SPI_RW(W25Q64_SECTOR_ERASE);
-    SPI_RW((addr >> 16) & 0xFF);  // 地址3字节(Big-Endian)
+    SPI_RW((addr >> 16) & 0xFF);  # 地址3字节(Big-Endian)
     SPI_RW((addr >> 8) & 0xFF);
     SPI_RW(addr & 0xFF);
     SPI_Unselect();
-    W25Q64_WaitBusy();  // 等待约 50ms
+    W25Q64_WaitBusy();  # 等待约 50ms
 }
 
-// 页写入 (最大256字节)
+# 页写入 (最大256字节)
 void W25Q64_PageWrite(uint32_t addr, uint8_t *data, uint16_t len) {
     W25Q64_WaitBusy();
     W25Q64_WriteEnable();
@@ -83,20 +83,20 @@ void W25Q64_PageWrite(uint32_t addr, uint8_t *data, uint16_t len) {
     SPI_Unselect();
 }
 
-// 从 Flash 读取汉字字库并在 OLED 上显示
+# 从 Flash 读取汉字字库并在 OLED 上显示
 void OLED_ShowChinese(uint16_t addr) {
-    uint8_t font_buf[32];  // 16×16汉字 = 32字节
+    uint8_t font_buf[32];  # 16×16汉字 = 32字节
     W25Q64_ReadData(addr, font_buf, 32);
-    // 将字模数据写入 OLED 显存...
+    # 将字模数据写入 OLED 显存...
 }
 ''',
         "references": [
-            {"source": "GitHub Topics: w25q64", "url": "https://github.com/topics/w25q64", "note": "W25Q64 相关项目合集"},
-            {"source": "CSDN: STM32CubeMX+HAL+SPI读写W25Q64", "url": "https://blog.csdn.net/weixin_71894495/article/details/149944069"},
+            {"source": "GitHub Topics: w25q64", "url": "https:#github.com/topics/w25q64", "note": "W25Q64 相关项目合集"},
+            {"source": "CSDN: STM32CubeMX+HAL+SPI读写W25Q64", "url": "https:#blog.csdn.net/weixin_71894495/article/details/149944069"},
         ]
-    },
-'''
+    }
+}
 
 def get_skill_info() -> dict:
-    """Return the skill data as a Python dict."""
-    return eval(SKILL_DATA)
+    """Return this skill's knowledge base entry as a Python dict."""
+    return SILL_DATA

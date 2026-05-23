@@ -7,6 +7,7 @@ Knowledge Base Loader - 自动扫描并聚合所有 skill 模块
 
 import os
 import importlib
+import importlib.util  # Python 3.12+ 需要显式导入
 import sys
 from pathlib import Path
 from typing import Dict
